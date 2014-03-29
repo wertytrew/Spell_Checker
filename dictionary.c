@@ -17,7 +17,7 @@
 bool check(const char* word)
 {
     // TODO
-    return false;
+    return false;a;dsj;ajdf;jas
 }
 
 /**
