@@ -15,10 +15,12 @@
 
 typedef struct node
 {
-    char* word[45];
+    char* word[46];
     struct node* next;
 }
 node;
+
+char* wordIn;
 
 /**
  * Returns true if word is in dictionary else false.
@@ -45,6 +47,17 @@ bool load(const char* dictionary)
     for (int i = 0; i < 27; i++)
     {
         root[i] = NULL;
+    }
+    
+    node* head;
+    head = NULL;
+    
+    // while there are words to read
+    while(fread(wordIn, sizeof(char * 46), 45, newDict) != 0)
+    {
+        // hash the first letter for the location in root
+        int hash; = wordIn[0] - 97;
+        
     }
     
     // for every dictionary word, iterate through the trie
@@ -84,4 +97,23 @@ bool unload(void)
 {
     // TODO
     return false;
+}
+
+/**
+ * Creates a new node, sets value to word created and pointer to NULL
+ */
+void insert(char* wordIn)
+{
+    // make new node
+    node* new = malloc(sizeof(node));
+        
+    // check for NULL
+    if(node->next == NULL)
+    {
+        return 1;
+    }
+        
+    // intitialize
+    node->word = wordIn;
+    node->next = NULL;
 }
