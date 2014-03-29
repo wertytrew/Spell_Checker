@@ -53,32 +53,51 @@ bool load(const char* dictionary)
     head = NULL;
     
     // while there are words to read
-    while(fread(wordIn, sizeof(char * 46), 45, newDict) != 0)
+    while(fread(wordIn, sizeof(char) * 46, 45, newDict) != 0)
     {
         // hash the first letter for the location in root
-        int hash; = wordIn[0] - 97;
+        int hash = wordIn[0] - 97;
         
+        if(root[hash] == NULL)
+        {
+            // make new node
+            node newNode = malloc(sizeof(node));
+                
+            // check for NULL
+            if(newNode->next == NULL)
+            {
+                exit(1);
+            }
+                
+            // intitialize
+            newNode->word = wordIn;
+            newNode->next = NULL;
+            
+            // new node is now the head
+            head = newNode;
+        }
+        
+        else
+        {
+            // make new node
+            node newNode = malloc(sizeof(node));
+                
+            // check for NULL
+            if(newNode->next == NULL)
+            {
+                exit(1);
+            }
+                
+            // intitialize
+            newNode->word = wordIn;
+            newNode->next = NULL;
+            
+            // insert new node at head
+            newNode->next = head;
+            head = newNode;
+        }
     }
-    
-    // for every dictionary word, iterate through the trie
-    
-    
-    // each element in children corresponds to a different letter
-    
-    
-    // check the value of children[i]
-    
-    
-        // if NULL create a new node and point children[i] point to it
-        
-        
-        // if not NULL move to new node and continue
-    
-    
-    // if at end of word, set 'isWord' to true
-    
-    
-    return false;
+    return true;
 }
 
 /**
@@ -97,23 +116,4 @@ bool unload(void)
 {
     // TODO
     return false;
-}
-
-/**
- * Creates a new node, sets value to word created and pointer to NULL
- */
-void insert(char* wordIn)
-{
-    // make new node
-    node* new = malloc(sizeof(node));
-        
-    // check for NULL
-    if(node->next == NULL)
-    {
-        return 1;
-    }
-        
-    // intitialize
-    node->word = wordIn;
-    node->next = NULL;
 }
