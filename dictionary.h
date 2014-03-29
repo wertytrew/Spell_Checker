@@ -36,4 +36,9 @@ unsigned int size(void);
  */
 bool unload(void);
 
+/**
+ * Creates a new node, sets value to word created and pointer to NULL
+ */
+void insert(char* wordIn);
+
 #endif // DICTIONARY_H
