@@ -1,5 +1,5 @@
 /****************************************************************************
- * dictionary.c
+ * dictionary.c aj;dsjf;adf git load
  *
  * Computer Science 50
  * Problem Set 6
@@ -8,8 +8,17 @@
  ***************************************************************************/
 
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "dictionary.h"
+
+typedef struct node
+{
+    char* word[45];
+    struct node* next;
+}
+node;
 
 /**
  * Returns true if word is in dictionary else false.
@@ -27,8 +36,18 @@ bool load(const char* dictionary)
 {
     // TODO
     
+    // open the dictionary file
+    FILE* newDict = fopen(dictionary, "r");
+    
+    // create root for hash table
+    node* root[27];
+    
+    for (int i = 0; i < 27; i++)
+    {
+        root[i] = NULL;
+    }
+    
     // for every dictionary word, iterate through the trie
-    for (int i; i  
     
     
     // each element in children corresponds to a different letter
