@@ -21,7 +21,13 @@ typedef struct node
 node;
 
 // keep track of #of words in dictionary loaded
-int wordCounter = 0; 
+int wordCounter = 0;
+
+// cursor to keep track of location of each node
+node* head; 
+
+// create root for hash table
+node* root[27];
 
 /**
  * Returns true if word is in dictionary else false.
@@ -30,13 +36,11 @@ bool check(const char* word)
 {
     // TODO
     
-    // for each word in the text
-    
-        // hash to find out proper location
+    // hash word to find out proper location
         
-        // search for the word comparing at same time
+    // search for the word comparing at same time
         
-        // if reach NULL, then word is not in dictionary and return false
+    // if reach NULL, then word is not in dictionary and return false
         
     return false;
 }
@@ -47,20 +51,16 @@ bool check(const char* word)
 bool load(const char* dictionary)
 {   
     // buffer for reading in dictionary words
-    char wordIn[46];
+    char wordIn[LENGTH + 1];
     
     // open the dictionary file
     FILE* newDict = fopen(dictionary, "r");
-    
-    // create root for hash table
-    node* root[27];
     
     for (int i = 0; i < 27; i++)
     {
         root[i] = NULL;
     }
     
-    node* head;
     head = NULL;
     
     // while there are words to read
