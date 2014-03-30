@@ -20,7 +20,8 @@ typedef struct node
 }
 node;
 
-char wordIn[46];
+// keep track of #of words in dictionary loaded
+int wordCounter = 0; 
 
 /**
  * Returns true if word is in dictionary else false.
@@ -28,6 +29,15 @@ char wordIn[46];
 bool check(const char* word)
 {
     // TODO
+    
+    // for each word in the text
+    
+        // hash to find out proper location
+        
+        // search for the word comparing at same time
+        
+        // if reach NULL, then word is not in dictionary and return false
+        
     return false;
 }
 
@@ -35,7 +45,10 @@ bool check(const char* word)
  * Loads dictionary into memory.  Returns true if successful else false.
  */
 bool load(const char* dictionary)
-{
+{   
+    // buffer for reading in dictionary words
+    char wordIn[46];
+    
     // open the dictionary file
     FILE* newDict = fopen(dictionary, "r");
     
@@ -53,6 +66,10 @@ bool load(const char* dictionary)
     // while there are words to read
     while(fscanf(newDict, "%s ", wordIn) > 0)
     {
+        
+        // keep track of #of words for constant time read in size function
+        wordCounter++;
+        
         // hash the first letter for the location in root
         int hash = wordIn[0] - 97;
         
