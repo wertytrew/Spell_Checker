@@ -101,7 +101,7 @@ bool load(const char* dictionary)
         }
     }
     
-    fclose(dictionary);
+    fclose(newDict);
     return true;
 }
 

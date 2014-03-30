@@ -101,5 +101,6 @@ int main(int argc, char* argv[])
             head = newNode;
         }
     }
+    fclose(dictionary);
     return 0;
 }
