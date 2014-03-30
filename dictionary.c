@@ -15,12 +15,12 @@
 
 typedef struct node
 {
-    char* word[46];
+    char* word;
     struct node* next;
 }
 node;
 
-char* wordIn;
+char wordIn[46];
 
 /**
  * Returns true if word is in dictionary else false.
@@ -36,8 +36,6 @@ bool check(const char* word)
  */
 bool load(const char* dictionary)
 {
-    // TODO
-    
     // open the dictionary file
     FILE* newDict = fopen(dictionary, "r");
     
@@ -53,7 +51,7 @@ bool load(const char* dictionary)
     head = NULL;
     
     // while there are words to read
-    while(fread(wordIn, sizeof(char) * 46, 45, newDict) != 0)
+    while(fscanf(newDict, "%s ", wordIn) > 0)
     {
         // hash the first letter for the location in root
         int hash = wordIn[0] - 97;
@@ -61,17 +59,20 @@ bool load(const char* dictionary)
         if(root[hash] == NULL)
         {
             // make new node
-            node newNode = malloc(sizeof(node));
+            node* newNode = malloc(sizeof(node));
                 
             // check for NULL
-            if(newNode->next == NULL)
+            if(newNode == NULL)
             {
-                exit(1);
+                return false;
             }
                 
             // intitialize
             newNode->word = wordIn;
             newNode->next = NULL;
+            
+            // connect to root
+            root[hash] = newNode;
             
             // new node is now the head
             head = newNode;
@@ -80,12 +81,12 @@ bool load(const char* dictionary)
         else
         {
             // make new node
-            node newNode = malloc(sizeof(node));
+            node* newNode = malloc(sizeof(node));
                 
             // check for NULL
-            if(newNode->next == NULL)
+            if(newNode == NULL)
             {
-                exit(1);
+                return false;
             }
                 
             // intitialize
@@ -94,9 +95,13 @@ bool load(const char* dictionary)
             
             // insert new node at head
             newNode->next = head;
+            
+            // update head
             head = newNode;
         }
     }
+    
+    fclose(dictionary);
     return true;
 }
 
