@@ -7,15 +7,17 @@
  * Implements a dictionary's functionality.
  ***************************************************************************/
 
+#include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "dictionary.h"
 
 typedef struct node
 {
-    char* word;
+    char* dword;
     struct node* next;
 }
 node;
@@ -23,25 +25,88 @@ node;
 // keep track of #of words in dictionary loaded
 int wordCounter = 0;
 
-// cursor to keep track of location of each node
-node* head; 
-
 // create root for hash table
-node* root[27];
+node* root[26];
+
+// create cursor to keep place in creating, pointing, and traversing through nodes
+node* current = NULL;
 
 /**
  * Returns true if word is in dictionary else false.
  */
 bool check(const char* word)
 {
-    // TODO
     
-    // hash word to find out proper location
+    // size of word read into buffer
+    int wordSize = sizeof(word);
+    
+    // prepare to make a new lowercase only word for comparison
+    char bufWord[wordSize];
+    
+    // make it
+    for(int i = 0; i < wordSize; i++)
+    {   
+        if (i == wordSize - 1)
+        {
+            bufWord[i] = '\0';
+        }
         
-    // search for the word comparing at same time
-        
-    // if reach NULL, then word is not in dictionary and return false
-        
+        else
+        {
+            bufWord[i] = tolower(word[i]);
+        }
+    }
+    
+    // hash word to achieve proper root node location
+    int hash = bufWord[0] - 97;
+    
+    // point to the correct root node to begin traversing
+    current = root[hash];
+    
+    // make sure there is even a word in hash table location
+    if(root[hash] == NULL)
+    {
+        return false;
+    }
+    
+    else if(root[hash] != NULL)
+    {
+        // progress through the nodes until the last node's next pointer member is NULL
+        while(current != NULL)
+        {               
+            // hold a copy of the dictionary word limiting to the same #of characters as word to check
+            char dictWord[wordSize];
+            
+            // hold copy of struct member value to compare to dictWord
+            char* wordTemp = current->dword;
+
+            //  check dictionary word against struct member value
+            if 
+            
+            printf("current is: %p\n", current);
+            printf("current->next is: %p\n", current->next);
+            printf("current->dword is: %s\n", wordTemp);
+            printf("wordTemp = current->dword is: %s\n\n", current->dword);
+            
+            for(int i = 0; i < wordSize; i++)
+            {   
+                dictWord[i] = wordTemp[i];
+            }
+            
+            // do a spell check
+            if(strcmp(bufWord, dictWord) == 0)
+            {
+                return true;
+            }
+            
+            else
+            {
+                // set current to the next node if any or NULL if it's already the last node in the list
+                current = current->next;
+            }
+        }    
+    }
+    
     return false;
 }
 
@@ -61,8 +126,6 @@ bool load(const char* dictionary)
         root[i] = NULL;
     }
     
-    head = NULL;
-    
     // while there are words to read
     while(fscanf(newDict, "%s ", wordIn) > 0)
     {
@@ -73,48 +136,36 @@ bool load(const char* dictionary)
         // hash the first letter for the location in root
         int hash = wordIn[0] - 97;
         
-        if(root[hash] == NULL)
+        // malloc space for a new node
+        node* newNode = malloc(sizeof(node));
+        
+        // error check
+        if (newNode == NULL)
         {
-            // make new node
-            node* newNode = malloc(sizeof(node));
-                
-            // check for NULL
-            if(newNode == NULL)
-            {
-                return false;
-            }
-                
-            // intitialize
-            newNode->word = wordIn;
-            newNode->next = NULL;
-            
-            // connect to root
-            root[hash] = newNode;
-            
-            // new node is now the head
-            head = newNode;
+            return false;
         }
         
-        else
+        // set value member of node to current word
+        newNode->dword = wordIn;
+        
+        // first insertion into linked list if that root node has not been used yet 
+        if(root[hash] == NULL)
         {
-            // make new node
-            node* newNode = malloc(sizeof(node));
-                
-            // check for NULL
-            if(newNode == NULL)
-            {
-                return false;
-            }
-                
-            // intitialize
-            newNode->word = wordIn;
-            newNode->next = NULL;
+            // sets to NULL
+            newNode->next = root[hash];
             
-            // insert new node at head
-            newNode->next = head;
+            // link it
+            root[hash] = newNode;
+        }
+        
+        else if(root[hash] != NULL)
+        {
+            // starts at the root
+            node* current = root[hash];
             
-            // update head
-            head = newNode;
+            // insert into new beginning of list
+            newNode->next = current;
+            root[hash] = newNode;
         }
     }
     
@@ -127,8 +178,7 @@ bool load(const char* dictionary)
  */
 unsigned int size(void)
 {
-    // TODO
-    return 0;
+    return wordCounter;
 }
 
 /**
