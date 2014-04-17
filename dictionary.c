@@ -17,7 +17,7 @@
 
 typedef struct node
 {
-    char* dword;
+    char dword[LENGTH + 1];
     struct node* next;
 }
 node;
@@ -28,8 +28,9 @@ int wordCounter = 0;
 // create root for hash table
 node* root[26];
 
-// create cursor to keep place in creating, pointing, and traversing through nodes
+// create cursors to keep place in creating, pointing, and traversing through nodes
 node* current = NULL;
+node* previous = NULL;
 
 /**
  * Returns true if word is in dictionary else false.
@@ -38,7 +39,7 @@ bool check(const char* word)
 {
     
     // size of word read into buffer
-    int wordSize = sizeof(word);
+    int wordSize = strlen(word) + 1;
     
     // prepare to make a new lowercase only word for comparison
     char bufWord[wordSize];
@@ -46,6 +47,7 @@ bool check(const char* word)
     // make it
     for(int i = 0; i < wordSize; i++)
     {   
+        // add the null terminator
         if (i == wordSize - 1)
         {
             bufWord[i] = '\0';
@@ -71,37 +73,20 @@ bool check(const char* word)
     
     else if(root[hash] != NULL)
     {
-        // progress through the nodes until the last node's next pointer member is NULL
+        // check words and iterate through the nodes until the last node's next pointer member is NULL or word is found
         while(current != NULL)
         {               
-            // hold a copy of the dictionary word limiting to the same #of characters as word to check
-            char dictWord[wordSize];
-            
             // hold copy of struct member value to compare to dictWord
             char* wordTemp = current->dword;
 
-            //  check dictionary word against struct member value
-            if 
-            
-            printf("current is: %p\n", current);
-            printf("current->next is: %p\n", current->next);
-            printf("current->dword is: %s\n", wordTemp);
-            printf("wordTemp = current->dword is: %s\n\n", current->dword);
-            
-            for(int i = 0; i < wordSize; i++)
-            {   
-                dictWord[i] = wordTemp[i];
-            }
-            
             // do a spell check
-            if(strcmp(bufWord, dictWord) == 0)
-            {
+            if(strcmp(bufWord, wordTemp) == 0)
+            { 
                 return true;
             }
             
             else
             {
-                // set current to the next node if any or NULL if it's already the last node in the list
                 current = current->next;
             }
         }    
@@ -126,9 +111,26 @@ bool load(const char* dictionary)
         root[i] = NULL;
     }
     
-    // while there are words to read
-    while(fscanf(newDict, "%s ", wordIn) > 0)
+    // while there are characters to read
+    while (true)
     {
+        // iterate through characters until newline
+        for (int i = 0; i < (LENGTH + 1); i++)
+        {
+            wordIn[i] = fgetc(newDict);
+            
+            if (wordIn[i] == EOF)
+            {
+                fclose(newDict);
+                return true;
+            }
+            
+            else if (wordIn[i] == '\n')
+            {
+                wordIn[i] = '\0';
+                break;
+            }
+        }        
         
         // keep track of #of words for constant time read in size function
         wordCounter++;
@@ -146,7 +148,7 @@ bool load(const char* dictionary)
         }
         
         // set value member of node to current word
-        newNode->dword = wordIn;
+        strcpy(newNode->dword, wordIn);
         
         // first insertion into linked list if that root node has not been used yet 
         if(root[hash] == NULL)
@@ -187,5 +189,47 @@ unsigned int size(void)
 bool unload(void)
 {
     // TODO
-    return false;
+    
+    // iterate through each root node
+    for (int i = 0; i < 26; i++)
+    {   
+        while (root[i] != NULL)
+        {
+            // start at the correct root node pointer
+            current = root[i];
+            previous = root[i];
+            
+            // keep traversing until end of nodes in the list
+            while (current->next != NULL)
+            {
+                previous = current;
+                current = current->next;
+            }
+            
+            // reached end of list
+            if (current->next == NULL);
+            {
+                // if this is only node left in list
+                if (root[i]->next == NULL)
+                {
+                    node* tmpNode = current;
+                    free(tmpNode);
+                    root[i] = NULL;
+                }
+                
+                // if this is not only node left
+                else if (root[i]->next != NULL)
+                {
+                    node* tmpNode = current;
+                    free(tmpNode);
+                    previous->next = NULL;
+                }
+                
+                // reset to start back at the biginning of root[i]
+                current = root[i];
+            }
+        }
+    }
+    
+    return true;
 }
