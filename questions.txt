@@ -1,11 +1,37 @@
-0.  TODO
-1.  TODO
-2.  TODO
-3.  TODO
-4.  TODO
-5.  TODO
-6.  TODO
-7.  TODO
-8.  TODO
-9.  TODO
-10. TODO
+0.  Pneumonoultramicroscopicsilicovolcanoconiosis is the longest word in the English language.
+
+1.  getrusage() returns resource usage measures (in the form of a struct pointed to by usage) for SELF, CHILDREN OR THREAD, the calling process, all children of the calling process that have terminated  and  been  waited
+              for, or the calling thread respectively.
+
+2.  There are sixteen members, two of which are also structs.
+
+3.  They are passed by reference so the values are not changes inadvertently.
+
+4.  The main for loop iterates by reading a single char from fp, checking if that character is indeed a character and not just the end of file, 
+    is alphanumeric OR an apostrophe (that is the first index of the string). That character is saved
+    to the string word at the appropriate index creating the string as the loop iterates.  If the word in the file read from contains numbers,
+    the rest of that word is read in to be ignored just so cursor is at next word.  The string is terminated with a null character, the number
+    of words is incremented for constant access later.  Then the check function I implemented is called.  The results of that function dictate
+    the results assigned to misspelled and printed.
+      
+5.  Relying on fscanf alone makes it much more difficult to control how a string is to be checked as misspelled or not.
+    For instance, with fgetc, it is much easier to handle cases which invole non-alphanumeric characters, and the
+    ability to manually terminate the string as needed.
+    
+6.  They are declared as constant so the original files are not able to be inadvertently changed through an incorrect implementation of the function.
+
+7.  The structures I used to implement my spell-checker were a hash table using a very simple hash function, a root array of struct node pointers 
+    that utilize a linked list of stucts for each node.  The node structs each contained a char array (not a char*) and a pointer.
+
+8.  The first time I got it working, it was a TIME IN TOTAL of approximately  3.7.  It now is a TIME IN TOTAL of 2.63.  While not the fastest, I managed 
+    to shave about 33% off the time - specifically the TIME IN check.  Check was over 2.0 before and now is 0.47.
+
+9.  The specific change I made was to delete unneeded code that created a temporary word to check against main's word by iterating through each letter,
+    then manually terminating with a null character because I thought since my char array being loaded in needed to manually be sized since it currently
+    is a char array of 45.  But i realized if I simply copied the char array struct to a new char* variable, it would automatically size itself according
+    to the null terminator that has already been manually entered into the char array.
+    
+10. There is still one opportunity for improvement.  My unload function is taking longer to unload than I know is needed.  My changes I tried seemed not to
+    work properly.
+
+
